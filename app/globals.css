@@ -3,25 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 0, 255, 0;
+  --background-start-rgb: 12, 12, 12;
+  --background-end-rgb: 12, 12, 12;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  font-family: "Courier New", Courier, monospace;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer components {
+  .hacker-input {
+    @apply bg-hacker-bg text-hacker-text border-hacker-accent focus:border-hacker-text focus:ring-hacker-text;
+  }
+
+  .hacker-button {
+    @apply bg-hacker-accent text-hacker-bg hover:bg-hacker-text hover:text-hacker-bg;
   }
 }
+
