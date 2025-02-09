@@ -42,6 +42,80 @@ interface MapComponentProps {
 mapboxgl.accessToken =
   "pk.eyJ1IjoiZmVyb3plbW9oaWRlZW4iLCJhIjoiY202eTFjaWJkMDFiNzJqb2k2NzdyM3poOCJ9.G9psrkBI_eno4W-bHNuxyQ";
 
+// Helper function to calculate distance between a point and a line segment
+function pointToLineDistance(
+  point: [number, number],
+  lineStart: [number, number],
+  lineEnd: [number, number]
+): number {
+  const [x, y] = point;
+  const [x1, y1] = lineStart;
+  const [x2, y2] = lineEnd;
+
+  const A = x - x1;
+  const B = y - y1;
+  const C = x2 - x1;
+  const D = y2 - y1;
+
+  const dot = A * C + B * D;
+  const lenSq = C * C + D * D;
+  let param = -1;
+
+  if (lenSq !== 0) param = dot / lenSq;
+
+  let xx, yy;
+
+  if (param < 0) {
+    xx = x1;
+    yy = y1;
+  } else if (param > 1) {
+    xx = x2;
+    yy = y2;
+  } else {
+    xx = x1 + param * C;
+    yy = y1 + param * D;
+  }
+
+  const dx = x - xx;
+  const dy = y - yy;
+
+  // Return distance in kilometers
+  return Math.sqrt(dx * dx + dy * dy) * 111; // Rough conversion to km
+}
+
+// Helper function to check if a camera is near the route
+function isCameraNearRoute(
+  camera: { location: { lat: number; lng: number } },
+  directRoute: [number, number][],
+  maxDistance: number = 0.1 // 100 meters in kilometers
+): boolean {
+  const cameraPoint: [number, number] = [
+    camera.location.lng,
+    camera.location.lat,
+  ];
+
+  // Check each segment of the route
+  for (let i = 0; i < directRoute.length - 1; i++) {
+    const distance = pointToLineDistance(
+      cameraPoint,
+      directRoute[i],
+      directRoute[i + 1]
+    );
+    if (distance <= maxDistance) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Helper function to count cameras near route
+function countCamerasNearRoute(
+  cameras: Array<{ location: { lat: number; lng: number } }>,
+  route: [number, number][]
+): number {
+  return cameras.filter((camera) => isCameraNearRoute(camera, route)).length;
+}
+
 export function MapComponent({
   routeData,
   isExpanded,
@@ -204,9 +278,13 @@ export function MapComponent({
         if (progress < 1) {
           requestAnimationFrame(animateRoute);
         } else {
-          // --- 5) Add camera markers ---
+          // Filter and add camera markers
           if (routeData.cameras && Array.isArray(routeData.cameras)) {
-            routeData.cameras.forEach((camera) => {
+            const relevantCameras = routeData.cameras.filter((camera) =>
+              isCameraNearRoute(camera, routeData.directRoute)
+            );
+
+            relevantCameras.forEach((camera) => {
               const { location, id } = camera;
               if (!location || !id) return;
 
@@ -305,6 +383,13 @@ export function MapComponent({
                   <br />
                   {">"} Duration:{" "}
                   {Math.round(routeData.directions.duration / 60)} minutes
+                  <br />
+                  {">"} Avoiding:{" "}
+                  {routeData.cameras &&
+                    `${countCamerasNearRoute(
+                      routeData.cameras,
+                      routeData.directRoute
+                    )} cameras`}
                 </div>
 
                 <div className="mb-2 group-hover:text-hacker-text transition-colors">
