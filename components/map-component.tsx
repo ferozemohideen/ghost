@@ -89,6 +89,28 @@ export function MapComponent({
     map.current.on("load", () => {
       if (!routeData) return;
 
+      // Add start marker
+      if (routeData.route.length > 0) {
+        const startPoint = routeData.route[0];
+        new mapboxgl.Marker({
+          color: "#00FF00",
+          scale: 1.2,
+        })
+          .setLngLat(startPoint)
+          .addTo(map.current!);
+      }
+
+      // Add end marker
+      if (routeData.route.length > 1) {
+        const endPoint = routeData.route[routeData.route.length - 1];
+        new mapboxgl.Marker({
+          color: "#FF0000",
+          scale: 1.2,
+        })
+          .setLngLat(endPoint)
+          .addTo(map.current!);
+      }
+
       // --- 1) Fit map to route bbox ---
       if (
         routeData.bbox &&
@@ -188,9 +210,15 @@ export function MapComponent({
               const { location, id } = camera;
               if (!location || !id) return;
 
+              // Create a custom marker element
+              const el = document.createElement("div");
+              el.className = "camera-marker";
+              el.innerHTML = "📸";
+              el.style.fontSize = "24px";
+              el.style.cursor = "pointer";
+
               const marker = new mapboxgl.Marker({
-                color: "#FF0000",
-                scale: 1.0, // Slightly larger than the default
+                element: el,
               })
                 .setLngLat([location.lng, location.lat])
                 .addTo(map.current!);

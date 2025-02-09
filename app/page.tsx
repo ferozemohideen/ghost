@@ -7,6 +7,7 @@ import { OldComputer } from "@/components/old-computer";
 import { TerminalWindow } from "@/components/terminal-window";
 import { MapComponent } from "@/components/map-component";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { useRouter } from "next/navigation";
 
 // Add Google Maps types
 declare global {
@@ -35,10 +36,9 @@ declare global {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
-  const [routeData, setRouteData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   useEffect(() => {
     if (window.google && window.google.maps) {
@@ -56,20 +56,11 @@ export default function Home() {
   }, []);
 
   const handleSearch = async (start: string, end: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `/api/getRoute?start=${encodeURIComponent(
-          start
-        )}&end=${encodeURIComponent(end)}`
-      );
-      const data = await response.json();
-      setRouteData(data);
-    } catch (error) {
-      console.error("Error fetching route data:", error);
-    } finally {
-      setLoading(false);
-    }
+    router.push(
+      `/search?start=${encodeURIComponent(start)}&end=${encodeURIComponent(
+        end
+      )}`
+    );
   };
 
   const suggestedRoutes = [
@@ -110,16 +101,13 @@ export default function Home() {
       const startCoords = await geocodeAddress(start);
       const endCoords = await geocodeAddress(end);
 
-      const response = await fetch(
-        `/api/getRoute?start=${encodeURIComponent(
+      router.push(
+        `/search?start=${encodeURIComponent(
           `${startCoords.lng},${startCoords.lat}`
         )}&end=${encodeURIComponent(`${endCoords.lng},${endCoords.lat}`)}`
       );
-      const data = await response.json();
-      setRouteData(data);
     } catch (error) {
       console.error("Error processing route:", error);
-    } finally {
       setLoading(false);
     }
   };
@@ -129,31 +117,11 @@ export default function Home() {
       <OldComputer>
         <TerminalWindow>
           <div className="space-y-4">
-            {!routeData && <GhostLogo className="mb-6" />}
+            <GhostLogo className="mb-6" />
             {isGoogleMapsLoaded ? (
-              <div
-                className={`flex items-center justify-center ${
-                  routeData ? "min-h-[400px]" : ""
-                }`}
-              >
+              <div>
                 {loading ? (
                   <LoadingSpinner />
-                ) : routeData ? (
-                  <div className="space-y-4 w-full">
-                    <div className="h-full w-full">
-                      <MapComponent
-                        routeData={routeData}
-                        isExpanded={isMapExpanded}
-                        onToggleExpand={() => setIsMapExpanded(!isMapExpanded)}
-                      />
-                    </div>
-                    <button
-                      onClick={() => setRouteData(null)}
-                      className="text-hacker-accent hover:text-hacker-text font-mono"
-                    >
-                      {`> [Back to Search]`}
-                    </button>
-                  </div>
                 ) : (
                   <RouteForm onSearch={handleSearch} />
                 )}
@@ -163,7 +131,7 @@ export default function Home() {
                 Initializing system...
               </div>
             )}
-            {!routeData && !loading && (
+            {!loading && (
               <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-4 font-mono">
                   [Suggested Routes]
