@@ -2,31 +2,7 @@
 
 import { useState, useCallback } from "react";
 import AutocompleteInput from "./autocomplete-input";
-
-// Add Google Maps types
-declare global {
-  interface Window {
-    google: {
-      maps: {
-        places: {
-          Autocomplete: any;
-          PlaceResult: {
-            formatted_address?: string;
-            geometry?: {
-              location?: {
-                lat(): number;
-                lng(): number;
-              };
-            };
-          };
-        };
-        event: {
-          clearInstanceListeners(instance: any): void;
-        };
-      };
-    };
-  }
-}
+import "@/types/google-maps"; // Import the types instead of declaring them
 
 interface RouteFormProps {
   onSearch: (start: string, end: string) => void;
@@ -54,9 +30,11 @@ export function RouteForm({ onSearch }: RouteFormProps) {
       onSearch(startStr, endStr);
     }
   };
-
   const handleStartChange = useCallback(
-    (address: string, place?: google.maps.places.PlaceResult) => {
+    (
+      address: string,
+      place?: Window["google"]["maps"]["places"]["PlaceResult"]
+    ) => {
       if (place?.geometry?.location) {
         setStart({
           address,
@@ -71,7 +49,10 @@ export function RouteForm({ onSearch }: RouteFormProps) {
   );
 
   const handleEndChange = useCallback(
-    (address: string, place?: google.maps.places.PlaceResult) => {
+    (
+      address: string,
+      place?: Window["google"]["maps"]["places"]["PlaceResult"]
+    ) => {
       if (place?.geometry?.location) {
         setEnd({
           address,

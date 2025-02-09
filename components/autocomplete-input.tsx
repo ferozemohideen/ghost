@@ -5,7 +5,10 @@ import { useEffect, useRef, useCallback } from "react";
 interface AutocompleteInputProps {
   placeholder: string;
   value: string;
-  onChange: (value: string, place?: google.maps.places.PlaceResult) => void;
+  onChange: (
+    value: string,
+    place?: Window["google"]["maps"]["places"]["PlaceResult"]
+  ) => void;
   onInputChange: (value: string) => void;
   id: string;
 }
@@ -18,7 +21,9 @@ export default function AutocompleteInput({
   id,
 }: AutocompleteInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const autocompleteRef = useRef<
+    Window["google"]["maps"]["places"]["Autocomplete"] | null
+  >(null);
 
   const handlePlaceChanged = useCallback(() => {
     const place = autocompleteRef.current?.getPlace();

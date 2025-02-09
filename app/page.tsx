@@ -8,32 +8,7 @@ import { TerminalWindow } from "@/components/terminal-window";
 import { MapComponent } from "@/components/map-component";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { useRouter } from "next/navigation";
-
-// Add Google Maps types
-declare global {
-  interface Window {
-    google: {
-      maps: {
-        Geocoder: new () => {
-          geocode(
-            request: { address: string },
-            callback: (
-              results: Array<{
-                geometry: {
-                  location: {
-                    lat(): number;
-                    lng(): number;
-                  };
-                };
-              }> | null,
-              status: string
-            ) => void
-          ): void;
-        };
-      };
-    };
-  }
-}
+import "@/types/google-maps";
 
 export default function Home() {
   const router = useRouter();
@@ -65,10 +40,6 @@ export default function Home() {
 
   const suggestedRoutes = [
     { start: "142 E 15th St, New York, NY", end: "424 E 9th St, New York, NY" },
-    {
-      start: "World Trade Center, New York, NY",
-      end: "Wall Street, New York, NY",
-    },
     { start: "Penn Station, New York, NY", end: "Times Square, New York, NY" },
     {
       start: "Grand Central Terminal, New York, NY",
