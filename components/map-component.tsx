@@ -217,6 +217,37 @@ export function MapComponent({
               el.style.fontSize = "24px";
               el.style.cursor = "pointer";
 
+              // Add tooltip container
+              const tooltip = document.createElement("div");
+              tooltip.className = "camera-tooltip";
+              tooltip.textContent = "[ click to hack ]";
+              tooltip.style.cssText = `
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 4px 8px;
+                background: rgba(0, 0, 0, 0.75);
+                color: #00FF00;
+                border: 1px solid #00FF00;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 12px;
+                white-space: nowrap;
+                opacity: 0;
+                transition: opacity 0.2s;
+                pointer-events: none;
+              `;
+              el.appendChild(tooltip);
+
+              // Add hover events
+              el.addEventListener("mouseenter", () => {
+                tooltip.style.opacity = "1";
+              });
+              el.addEventListener("mouseleave", () => {
+                tooltip.style.opacity = "0";
+              });
+
               const marker = new mapboxgl.Marker({
                 element: el,
               })
