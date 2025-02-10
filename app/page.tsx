@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   const suggestedRoutes = [
-    { start: "142 E 15th St, New York, NY", end: "424 E 9th St, New York, NY" },
+    { start: "142 E 27th St, New York, NY", end: "424 E 9th St, New York, NY" },
     { start: "Penn Station, New York, NY", end: "Times Square, New York, NY" },
     {
       start: "Grand Central Terminal, New York, NY",
