@@ -1,4 +1,4 @@
-# Ghost - Surveillance-Free Route Planning
+# Ghost - Surveillance-Free Route Planning in NYC
 
 Ghost is a privacy-focused web application that helps users navigate cities while avoiding surveillance cameras. It provides alternative routes that minimize exposure to known surveillance systems.
 

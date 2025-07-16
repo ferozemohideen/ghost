@@ -7,6 +7,8 @@ import { OldComputer } from "@/components/old-computer";
 import { TerminalWindow } from "@/components/terminal-window";
 import { MapComponent } from "@/components/map-component";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { CoffeeButton } from "@/components/coffee-button";
+import { GitHubButton } from "@/components/github-button";
 import { useRouter } from "next/navigation";
 import "@/types/google-maps";
 
@@ -84,7 +86,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-2 bg-gray-900">
+    <main className="flex min-h-screen flex-col items-center justify-center p-2 bg-gray-900">
       <OldComputer>
         <TerminalWindow>
           <div className="space-y-4">
@@ -128,6 +130,10 @@ export default function Home() {
           </div>
         </TerminalWindow>
       </OldComputer>
+      <div className="mt-4 flex gap-3">
+        <CoffeeButton />
+        <GitHubButton />
+      </div>
     </main>
   );
 }

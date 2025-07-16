@@ -8,6 +8,8 @@ import { OldComputer } from "@/components/old-computer";
 import { TerminalWindow } from "@/components/terminal-window";
 import { useRouteData } from "@/hooks/use-route-data";
 import { GhostLogo } from "@/components/ghost-logo";
+import { CoffeeButton } from "@/components/coffee-button";
+import { GitHubButton } from "@/components/github-button";
 
 function SearchContent() {
   const router = useRouter();
@@ -61,7 +63,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-2 bg-gray-900">
+    <main className="flex min-h-screen flex-col items-center justify-center p-2 bg-gray-900">
       <OldComputer>
         <TerminalWindow>
           <Suspense
@@ -76,6 +78,10 @@ export default function SearchPage() {
           </Suspense>
         </TerminalWindow>
       </OldComputer>
+      <div className="mt-4 flex gap-3">
+        <CoffeeButton />
+        <GitHubButton />
+      </div>
     </main>
   );
 }

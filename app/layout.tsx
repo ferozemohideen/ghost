@@ -4,7 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
-  title: "Ghost - Surveillance-Free Route Planning",
+  title: "Ghost - Surveillance-Free Route Planning in NYC",
   description: "Find paths in the city with minimal surveillance",
 };
 

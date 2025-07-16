@@ -13,8 +13,9 @@ export function GhostLogo({ className = "" }: { className?: string }) {
   ████████▀    ███    █▀     ▀██████▀   ▄████████▀     ▄████▀   
 `}
       </pre>
-      <p className="text-sm text-hacker-accent">Surveillance-Free Route Planning</p>
+      <p className="text-sm text-hacker-accent">
+        Surveillance-Free Route Planning in NYC
+      </p>
     </div>
-  )
+  );
 }
-
